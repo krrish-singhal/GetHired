@@ -1,7 +1,8 @@
 import express from "express";
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+
 import placementsRouter from "./routes/placements.js";
 import blogsRouter from "./routes/blogs.js";
 import adminRouter from "./routes/admin.js";
@@ -10,11 +11,20 @@ import eventsRouter from "./routes/events.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+
+const config = {
+  port: process.env.PORT || 5000,
+  mongoURI: process.env.MONGODB_URI,
+  allowedOrigins: [
+    "https://gethiredapp.vercel.app",
+    "http://localhost:5173",
+  ]
+}
 
 app.use(cors({
   origin: "https://gethiredapp.vercel.app"
 }));
+
 app.use(express.json());
 
 // Routes
