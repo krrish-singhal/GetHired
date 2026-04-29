@@ -640,14 +640,12 @@ function TopPerformers({ performers }) {
 
 // ── Main Dashboard ─────────────────────────────────────────
 export default function Dashboard() {
-  const [stats, setStats] = useState(FALLBACK_STATS);
-  const [yearlyData, setYearlyData] = useState(FALLBACK_YEARLY);
-  const [branchData, setBranchData] = useState(FALLBACK_BRANCH);
-  const [companiesData, setCompaniesData] = useState(FALLBACK_COMPANIES);
-  const [pkgDistData, setPkgDistData] = useState(FALLBACK_PKGDIST);
-  const [performers, setPerformers] = useState(
-    FALLBACK_PLACEMENTS.slice(0, 10).sort((a, b) => b.package - a.package),
-  );
+  const [stats, setStats] = useState(null);
+  const [yearlyData, setYearlyData] = useState(null);
+  const [branchData, setBranchData] = useState(null);
+  const [companiesData, setCompaniesData] = useState(null);
+  const [pkgDistData, setPkgDistData] = useState(null);
+  const [performers, setPerformers] = useState([]);
   const [placements, setPlacements] = useState([]);
   const [filterOptions, setFilterOptions] = useState(FALLBACK_FILTERS);
   const [filters, setFilters] = useState({
@@ -675,29 +673,42 @@ export default function Dashboard() {
       getTopPerformers(),
       getFilterOptions(),
     ]).then(([statsR, yearR, branchR, compR, pkgR, perfR, filtersR]) => {
-      if (
-        statsR.status === "fulfilled" &&
-        statsR.value.data?.totalPlacements > 0
-      )
-        setStats(statsR.value.data);
-      if (yearR.status === "fulfilled" && yearR.value.data?.length > 0)
-        setYearlyData(yearR.value.data);
-      if (branchR.status === "fulfilled" && branchR.value.data?.length > 0)
-        setBranchData(branchR.value.data);
-      if (compR.status === "fulfilled" && compR.value.data?.length > 0)
-        setCompaniesData(compR.value.data);
-      if (
-        pkgR.status === "fulfilled" &&
-        pkgR.value.data?.some((d) => d.count > 0)
-      )
-        setPkgDistData(pkgR.value.data);
-      if (perfR.status === "fulfilled" && perfR.value.data?.length > 0)
-        setPerformers(perfR.value.data);
+      setStats(
+        statsR.status === "fulfilled" && statsR.value.data?.totalPlacements > 0
+          ? statsR.value.data
+          : FALLBACK_STATS,
+      );
+      setYearlyData(
+        yearR.status === "fulfilled" && yearR.value.data?.length > 0
+          ? yearR.value.data
+          : FALLBACK_YEARLY,
+      );
+      setBranchData(
+        branchR.status === "fulfilled" && branchR.value.data?.length > 0
+          ? branchR.value.data
+          : FALLBACK_BRANCH,
+      );
+      setCompaniesData(
+        compR.status === "fulfilled" && compR.value.data?.length > 0
+          ? compR.value.data
+          : FALLBACK_COMPANIES,
+      );
+      setPkgDistData(
+        pkgR.status === "fulfilled" && pkgR.value.data?.some((d) => d.count > 0)
+          ? pkgR.value.data
+          : FALLBACK_PKGDIST,
+      );
+      setPerformers(
+        perfR.status === "fulfilled" && perfR.value.data?.length > 0
+          ? perfR.value.data
+          : FALLBACK_PLACEMENTS.slice(0, 10).sort((a, b) => b.package - a.package),
+      );
       if (
         filtersR.status === "fulfilled" &&
         filtersR.value.data?.years?.length > 0
-      )
+      ) {
         setFilterOptions(filtersR.value.data);
+      }
       setChartsLoading(false);
     });
   }, []);
@@ -778,26 +789,41 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="Total Placements"
-            value={stats.totalPlacements?.toLocaleString()}
-            color="blue"
-          />
-          <StatCard
-            label="Companies Visited"
-            value={stats.totalCompanies}
-            color="purple"
-          />
-          <StatCard
-            label="Highest Package"
-            value={formatPkg(stats.highestPackage)}
-            color="green"
-          />
-          <StatCard
-            label="Avg Package"
-            value={formatPkg(stats.avgPackage)}
-            color="amber"
-          />
+          {(chartsLoading || !stats) ? (
+            Array.from({ length: 4 }, (_, idx) => (
+              <div
+                key={idx}
+                className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800 animate-pulse"
+              >
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4" />
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mt-3" />
+              </div>
+            ))
+          ) : (
+            <>
+              <StatCard
+                label="Total Placements"
+                value={stats.totalPlacements?.toLocaleString()}
+                color="blue"
+              />
+              <StatCard
+                label="Companies Visited"
+                value={stats.totalCompanies}
+                color="purple"
+              />
+              <StatCard
+                label="Highest Package"
+                value={formatPkg(stats.highestPackage)}
+                color="green"
+              />
+              <StatCard
+                label="Avg Package"
+                value={formatPkg(stats.avgPackage)}
+                color="amber"
+              />
+            </>
+          )}
         </div>
 
         {/* Charts Row 1 — Year + Branch */}
@@ -1030,12 +1056,24 @@ export default function Dashboard() {
         </div>
 
         {/* Top Performers */}
-        {performers.length > 0 && (
-          <div>
-            <TopPerformers performers={performers} />
+        {chartsLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }, (_, idx) => (
+              <div
+                key={idx}
+                className="h-32 rounded-2xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800 animate-pulse"
+              />
+            ))}
           </div>
+        ) : (
+          performers.length > 0 && (
+            <div>
+              <TopPerformers performers={performers} />
+            </div>
+          )
         )}
       </div>
     </div>
   );
 }
+

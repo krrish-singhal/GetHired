@@ -191,10 +191,10 @@ function Blogs() {
   const { isAdmin } = useAuth();
   const [search, setSearch] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
-  // Initialise with local data immediately — no loading screen on first paint
-  const [blogs, setBlogs] = useState(localBlogs);
-  const [allTags, setAllTags] = useState(LOCAL_TAGS);
+  const [blogs, setBlogs] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Edit/Delete modal state
   const [editBlog, setEditBlog] = useState(null);
@@ -211,11 +211,15 @@ function Blogs() {
     const params = {};
     if (debouncedSearch) params.search = debouncedSearch;
     if (selectedTag) params.tag = selectedTag;
+    setLoading(true);
     getBlogs(params)
       .then(({ data }) => {
-        if (data.data && data.data.length > 0) {
-          setBlogs(data.data);
-          if (data.allTags && data.allTags.length > 0) setAllTags(data.allTags);
+        if (data.data) setBlogs(data.data);
+        else setBlogs([]);
+        if (data.allTags?.length > 0) {
+          setAllTags(data.allTags);
+        } else if (!selectedTag) {
+          setAllTags(LOCAL_TAGS);
         }
       })
       .catch(() => {
@@ -229,7 +233,8 @@ function Blogs() {
         });
         setBlogs(filtered);
         setAllTags(LOCAL_TAGS);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [debouncedSearch, selectedTag]);
 
   // Client-side filter for instant search feel
@@ -308,29 +313,54 @@ function Blogs() {
           >
             All
           </button>
-          {allTags.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => setSelectedTag(tag === selectedTag ? "" : tag)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${selectedTag === tag
-                  ? "bg-yellow-400 text-gray-900 border-yellow-400"
-                  : "text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-700 bg-white dark:bg-gray-800"
-                }`}
-            >
-              {tag}
-            </button>
-          ))}
+          {loading && allTags.length === 0 ? (
+            Array.from({ length: 4 }, (_, idx) => (
+              <span
+                key={idx}
+                className="w-20 h-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
+              />
+            ))
+          ) : (
+            allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag === selectedTag ? "" : tag)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${selectedTag === tag
+                    ? "bg-yellow-400 text-gray-900 border-yellow-400"
+                    : "text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-yellow-300 dark:hover:border-yellow-700 bg-white dark:bg-gray-800"
+                  }`}
+              >
+                {tag}
+              </button>
+            ))
+          )}
         </div>
 
         {/* Results count */}
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          {displayBlogs.length}{" "}
-          {displayBlogs.length === 1 ? "article" : "articles"} found
-          {debouncedSearch && ` for "${debouncedSearch}"`}
+          {loading
+            ? "Loading articles…"
+            : `${displayBlogs.length} ${displayBlogs.length === 1 ? "article" : "articles"} found${debouncedSearch ? ` for "${debouncedSearch}"` : ""}`}
         </p>
 
         {/* Blog list */}
-        {displayBlogs.length === 0 ? (
+        {loading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 5 }, (_, idx) => (
+              <div
+                key={idx}
+                className="rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm animate-pulse"
+              >
+                <div className="p-6 space-y-4">
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+                  <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : displayBlogs.length === 0 ? (
           <div className="text-center py-16 text-gray-400">
             <svg className="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -375,4 +405,5 @@ function Blogs() {
 }
 
 export default Blogs;
+
 
