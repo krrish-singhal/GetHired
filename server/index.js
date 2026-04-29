@@ -71,23 +71,7 @@ app.get("/api/health", (_, res) => {
   });
 });
 
-// Always start HTTP server first
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-mongoose
-  .connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => {
-    console.error("MongoDB connection failed:", err.message);
-    console.log(
-      "Server running without DB — whitelist your IP in MongoDB Atlas to enable DB features",
-    );
-  });
-
-  
-  app.use((req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
@@ -97,3 +81,22 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
+const startServer = async () => {
+  try {
+    await mongoose.connect(config.mongoURI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+
+    console.log("Connected to MongoDB");
+
+    app.listen(config.port, () => {
+      console.log(`Server running on port ${config.port}`);
+    });
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
