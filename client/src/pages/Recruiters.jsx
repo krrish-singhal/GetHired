@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { companies, TIER_META } from "../data/companies";
@@ -40,10 +40,21 @@ export default function Recruiters() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [tier, setTier] = useState("all");
+  const [companyList, setCompanyList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => {
+      setCompanyList(companies);
+      setLoading(false);
+    }, 80);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return companies.filter((c) => {
+    return companyList.filter((c) => {
       const matchSearch =
         !q ||
         c.name.toLowerCase().includes(q) ||
@@ -51,7 +62,7 @@ export default function Recruiters() {
       const matchTier = tier === "all" || c.tier === tier;
       return matchSearch && matchTier;
     });
-  }, [search, tier]);
+  }, [search, tier, companyList]);
 
   // Group by tier in a fixed order
   const tierOrder = [
@@ -78,25 +89,26 @@ export default function Recruiters() {
             Our Recruiters
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xl">
-            {companies.length} companies that actively recruit from KIET across
-            all branches and programmes.
+            {loading
+              ? "Loading companies from KIET…"
+              : `${companyList.length} companies that actively recruit from KIET across all branches and programmes.`}
           </p>
 
           {/* Stats strip */}
           <div className="mt-6 flex flex-wrap gap-4">
             {[
-              { label: "Companies", value: companies.length },
+              { label: "Companies", value: companyList.length },
               {
                 label: "Top Product",
-                value: companies.filter((c) => c.tier === "top-product").length,
+                value: companyList.filter((c) => c.tier === "top-product").length,
               },
               {
                 label: "Unicorns",
-                value: companies.filter((c) => c.tier === "unicorn").length,
+                value: companyList.filter((c) => c.tier === "unicorn").length,
               },
               {
                 label: "IT Services",
-                value: companies.filter((c) => c.tier === "it-services").length,
+                value: companyList.filter((c) => c.tier === "it-services").length,
               },
             ].map(({ label, value }) => (
               <div
@@ -149,11 +161,38 @@ export default function Recruiters() {
 
         {/* ── Results count ── */}
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
-          Showing {filtered.length} of {companies.length} companies
+          {loading
+            ? "Loading company list…"
+            : `Showing ${filtered.length} of ${companyList.length} companies`}
         </p>
 
         {/* ── Grouped grid ── */}
-        {grouped.length === 0 ? (
+        {loading ? (
+          <div className="space-y-10">
+            {Array.from({ length: 2 }, (_, sectionIdx) => (
+              <section key={sectionIdx}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-5 w-28 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                  <div className="h-3 w-20 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                  <div className="flex-1 h-px bg-gray-100 dark:bg-gray-800" />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {Array.from({ length: 6 }, (_, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm p-4 animate-pulse"
+                    >
+                      <div className="h-14 rounded-2xl bg-gray-200 dark:bg-gray-700 mb-4" />
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-3" />
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mb-3" />
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mt-auto" />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : grouped.length === 0 ? (
           <div className="text-center py-24 text-gray-400 dark:text-gray-600">
             <svg
               className="w-12 h-12 mx-auto mb-3 opacity-40"
@@ -241,3 +280,4 @@ export default function Recruiters() {
     </div>
   );
 }
+
