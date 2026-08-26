@@ -146,7 +146,7 @@ export default function CompanyDetails() {
               <span className="mb-2 flex justify-center text-yellow-500 dark:text-yellow-400">
                 {item.icon}
               </span>
-              <p className="text-xs font-bold text-gray-800 dark:text-gray-200 break-words">
+              <p className="text-xs font-bold text-gray-800 dark:text-gray-200 wrap-break-word">
                 {item.value}
               </p>
               <p className="text-gray-400 dark:text-gray-500 text-[10px] mt-1">

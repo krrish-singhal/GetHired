@@ -7,6 +7,7 @@ import placementsRouter from "./routes/placements.js";
 import blogsRouter from "./routes/blogs.js";
 import adminRouter from "./routes/admin.js";
 import eventsRouter from "./routes/events.js";
+import feedbackRouter from "./routes/feedback.js";
 
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -57,6 +58,7 @@ app.use("/api/placements", placementsRouter);
 app.use("/api/blogs", blogsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/events", eventsRouter);
+app.use("/api/feedback", feedbackRouter);
 
 // Health check
 app.get("/api/health", (_, res) => {

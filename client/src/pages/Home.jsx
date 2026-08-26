@@ -5,6 +5,7 @@ import TopRecruiters from "../components/home/TopRecruiters";
 import BlogsPreview from "../components/home/BlogsPreview";
 import Footer from "../components/home/Footer";
 import EventsSection from "../components/EventsSection";
+import FeedbackSection from "../components/home/FeedbackSection";
 function Home() {
   return (
     <div>
@@ -14,9 +15,10 @@ function Home() {
       <TopRecruiters />
       <BlogsPreview />
       <EventsSection previewMode={true} />
+      <FeedbackSection />
       <Footer />
     </div>
-  )
+  );
 }
 
 export default Home;

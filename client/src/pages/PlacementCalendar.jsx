@@ -2,8 +2,16 @@
 // NEW FEATURE: Placement Calendar — upcoming drives, deadlines, PPTs
 import { useState } from "react";
 import {
-  FaCalendarAlt, FaRocket, FaLaptop, FaMicrophone,
-  FaStar, FaUsers, FaBuilding, FaCalendarCheck, FaCheckCircle, FaInbox,
+  FaCalendarAlt,
+  FaRocket,
+  FaLaptop,
+  FaMicrophone,
+  FaStar,
+  FaUsers,
+  FaBuilding,
+  FaCalendarCheck,
+  FaCheckCircle,
+  FaInbox,
 } from "react-icons/fa";
 
 const EVENTS = [
@@ -214,7 +222,10 @@ export default function PlacementCalendar() {
   const past = filtered.filter((e) => daysLeft(e.date) < 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200" style={{ fontFamily: '"Inter", system-ui, sans-serif' }}>
+    <div
+      className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200"
+      style={{ fontFamily: '"Inter", system-ui, sans-serif' }}
+    >
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-5">
@@ -283,10 +294,11 @@ export default function PlacementCalendar() {
                   <button
                     key={b}
                     onClick={() => setFilterBranch(b)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${filterBranch === b
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                      filterBranch === b
                         ? "bg-yellow-400 text-gray-900 border border-transparent"
                         : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
+                    }`}
                   >
                     {b}
                   </button>
@@ -302,10 +314,11 @@ export default function PlacementCalendar() {
                   <button
                     key={t}
                     onClick={() => setFilterType(t)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${filterType === t
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                      filterType === t
                         ? "bg-yellow-400 text-gray-900 border border-transparent"
                         : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
+                    }`}
                   >
                     {t}
                   </button>
@@ -321,15 +334,30 @@ export default function PlacementCalendar() {
                   <button
                     key={t}
                     onClick={() => setFilterTag(t)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors capitalize ${filterTag === t
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors capitalize ${
+                      filterTag === t
                         ? "bg-yellow-400 text-gray-900 border border-transparent"
                         : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      }`}
+                    }`}
                   >
-                    {t === "dream" ? <span className="flex items-center gap-1"><FaStar size={10} />Dream</span>
-                      : t === "mass" ? <span className="flex items-center gap-1"><FaUsers size={10} />Mass</span>
-                        : t === "normal" ? <span className="flex items-center gap-1"><FaBuilding size={10} />Normal</span>
-                          : "All"}
+                    {t === "dream" ? (
+                      <span className="flex items-center gap-1">
+                        <FaStar size={10} />
+                        Dream
+                      </span>
+                    ) : t === "mass" ? (
+                      <span className="flex items-center gap-1">
+                        <FaUsers size={10} />
+                        Mass
+                      </span>
+                    ) : t === "normal" ? (
+                      <span className="flex items-center gap-1">
+                        <FaBuilding size={10} />
+                        Normal
+                      </span>
+                    ) : (
+                      "All"
+                    )}
                   </button>
                 ))}
               </div>
@@ -341,7 +369,8 @@ export default function PlacementCalendar() {
         {upcoming.length > 0 && (
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <FaCalendarCheck className="text-yellow-500" size={18} /> Upcoming ({upcoming.length})
+              <FaCalendarCheck className="text-yellow-500" size={18} /> Upcoming
+              ({upcoming.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {upcoming.map((event) => {
@@ -383,9 +412,22 @@ export default function PlacementCalendar() {
                       <span
                         className={`text-[10px] uppercase tracking-wide font-bold px-2.5 py-1 rounded-full ${TAG_BADGE[event.tag]}`}
                       >
-                        {event.tag === "dream" ? <span className="flex items-center gap-1"><FaStar size={9} />Dream</span>
-                          : event.tag === "mass" ? <span className="flex items-center gap-1"><FaUsers size={9} />Mass</span>
-                            : <span className="flex items-center gap-1"><FaBuilding size={9} />Normal</span>}
+                        {event.tag === "dream" ? (
+                          <span className="flex items-center gap-1">
+                            <FaStar size={9} />
+                            Dream
+                          </span>
+                        ) : event.tag === "mass" ? (
+                          <span className="flex items-center gap-1">
+                            <FaUsers size={9} />
+                            Mass
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1">
+                            <FaBuilding size={9} />
+                            Normal
+                          </span>
+                        )}
                       </span>
                     </div>
 
@@ -415,12 +457,13 @@ export default function PlacementCalendar() {
                         </p>
                       </div>
                       <span
-                        className={`text-xs font-bold px-3 py-1.5 rounded-lg border ${days <= 3
+                        className={`text-xs font-bold px-3 py-1.5 rounded-lg border ${
+                          days <= 3
                             ? "bg-red-50 text-red-700 border-red-200"
                             : days <= 7
                               ? "bg-orange-50 text-orange-700 border-orange-200"
                               : "bg-green-50 text-green-700 border-green-200"
-                          }`}
+                        }`}
                       >
                         {days === 0 ? "Today!" : `${days}d left`}
                       </span>
@@ -445,7 +488,8 @@ export default function PlacementCalendar() {
         {past.length > 0 && (
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 mt-8 flex items-center gap-2">
-              <FaCheckCircle className="text-green-500" size={18} /> Past Events ({past.length})
+              <FaCheckCircle className="text-green-500" size={18} /> Past Events
+              ({past.length})
             </h2>
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
               <div className="overflow-x-auto">
@@ -491,7 +535,10 @@ export default function PlacementCalendar() {
 
         {filtered.length === 0 && (
           <div className="text-center py-16 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800">
-            <FaInbox className="mx-auto mb-3 text-gray-300 dark:text-gray-600" size={48} />
+            <FaInbox
+              className="mx-auto mb-3 text-gray-300 dark:text-gray-600"
+              size={48}
+            />
             <p className="font-medium text-gray-500 dark:text-gray-400">
               No events match your filters
             </p>

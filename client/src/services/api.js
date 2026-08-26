@@ -42,4 +42,8 @@ export const createEvent = (data) => api.post("/events", data);
 export const updateEvent = (id, data) => api.put(`/events/${id}`, data);
 export const deleteEvent = (id) => api.delete(`/events/${id}`);
 
+// ── Feedback ─────────────────────────────────────────────────
+export const getFeedbacks = () => api.get("/feedback");
+export const submitFeedback = (data) => api.post("/feedback", data);
+
 export default api;

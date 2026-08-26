@@ -52,10 +52,11 @@ export default function Navbar() {
             <Link
               key={l.to}
               to={l.to}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${pathname === l.to
-                ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
-                : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === l.to
+                  ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+              }`}
             >
               {l.label}
             </Link>
@@ -69,7 +70,7 @@ export default function Navbar() {
             aria-label="Toggle theme"
             className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            {dark ? (
+            {!dark ? (
               <svg
                 className="w-4.5 h-4.5"
                 viewBox="0 0 20 20"
@@ -166,10 +167,11 @@ export default function Navbar() {
               key={l.to}
               to={l.to}
               onClick={() => setMenuOpen(false)}
-              className={`block px-4 py-2 rounded-lg text-sm font-medium ${pathname === l.to
-                ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
-                : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                }`}
+              className={`block px-4 py-2 rounded-lg text-sm font-medium ${
+                pathname === l.to
+                  ? "bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+              }`}
             >
               {l.label}
             </Link>

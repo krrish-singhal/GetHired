@@ -6,7 +6,13 @@ import {
   getBranchChart,
 } from "../../services/api";
 import { formatPkg } from "../../utils/formatPkg";
-import { FaBuilding, FaGraduationCap, FaClipboardList, FaMoneyBillWave, FaTrophy } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaGraduationCap,
+  FaClipboardList,
+  FaMoneyBillWave,
+  FaTrophy,
+} from "react-icons/fa";
 
 function RecentSeason() {
   const navigate = useNavigate();
@@ -36,8 +42,21 @@ function RecentSeason() {
   }, []);
 
   const cards = [
-    { label: "Top Company", value: topCompany, icon: <FaBuilding size={22} className="text-blue-400" /> },
-    { label: "Top Branch", value: topBranch, icon: <FaGraduationCap size={22} className="text-gray-700 dark:text-gray-300" /> },
+    {
+      label: "Top Company",
+      value: topCompany,
+      icon: <FaBuilding size={22} className="text-blue-400" />,
+    },
+    {
+      label: "Top Branch",
+      value: topBranch,
+      icon: (
+        <FaGraduationCap
+          size={22}
+          className="text-gray-700 dark:text-gray-300"
+        />
+      ),
+    },
     {
       label: "Total Offers (2024)",
       value: `${stats.totalPlacements}+`,
@@ -97,7 +116,9 @@ function RecentSeason() {
               <p className="text-xs text-gray-500">
                 {topPerformer.branch} · {topPerformer.company} ·{" "}
                 <span className="text-green-600 font-semibold">
-                  {(topPerformer.package >= 100)?(`${topPerformer.package/100} Cr`):(`${topPerformer.package} LPA`)}
+                  {topPerformer.package >= 100
+                    ? `${topPerformer.package / 100} Cr`
+                    : `${topPerformer.package} LPA`}
                 </span>
               </p>
             </div>

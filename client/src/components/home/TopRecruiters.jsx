@@ -20,7 +20,7 @@ function LogoImg({ src, domain, name }) {
       src={srcs[idx]}
       alt={name}
       onError={() => setIdx((i) => i + 1)}
-      className="h-7 w-auto max-w-[72px] object-contain"
+      className="h-7 w-auto max-w-18 object-contain"
     />
   );
 }
